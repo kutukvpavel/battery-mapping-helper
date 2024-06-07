@@ -10,7 +10,7 @@ namespace battery_mapping_helper
     {
         static void WriteOutputFile(string path, List<double> contents, int roundingDigits)
         {
-            File.WriteAllLines(Path.Combine(Environment.CurrentDirectory, path), contents.Select(x => x.ToString($"F{roundingDigits}", CultureInfo.InvariantCulture)));
+            File.WriteAllLines(Path.Combine(Environment.CurrentDirectory, path), contents.Select(x => x.ToString($"F{roundingDigits}", CultureInfo.InvariantCulture) + ","));
         }
 
         static void Main(string[] args)
@@ -57,9 +57,9 @@ namespace battery_mapping_helper
                 RoundingDigitsV = 3
             };
 
-            var chargeRes = chargeCurve.CalculateFractions(chargeVolts, chargeFracts).Select(x => x >= 0 ? x : 0).ToList();
+            var chargeRes = chargeCurve.CalculateFractions(chargeVolts, chargeFracts).Select(x => x >= 0 ? 100 * x : 0).ToList();
             chargeRes.Sort();
-            var dischargeRes = dischargeCurve.CalculateFractions(dischargeVolts, dischargeFracts).Select(x => x >= 0 ? x : 0).ToList();
+            var dischargeRes = dischargeCurve.CalculateFractions(dischargeVolts, dischargeFracts).Select(x => x >= 0 ? 100 * x : 0).ToList();
             dischargeRes.Sort();
 
             WriteOutputFile("charge.csv", chargeRes, 4);
